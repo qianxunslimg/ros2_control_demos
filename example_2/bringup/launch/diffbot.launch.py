@@ -1,17 +1,3 @@
-# Copyright 2020 ros2_control Development Team
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
@@ -23,6 +9,8 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # Get URDF via xacro
+    # xacro /path/to/ros2_control_demo_example_2/urdf/diffbot.urdf.xacro
+    # 这个命令的返回值是经过处理的 URDF 文件内容
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
@@ -34,6 +22,7 @@ def generate_launch_description():
     )
     robot_description = {"robot_description": robot_description_content}
 
+    # generate the path of robot_controllers
     robot_controllers = PathJoinSubstitution(
         [
             FindPackageShare("ros2_control_demo_example_2"),
@@ -41,6 +30,7 @@ def generate_launch_description():
             "diffbot_controllers.yaml",
         ]
     )
+    #generate the file of rviz2 config
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("ros2_control_demo_example_2"), "rviz", "diffbot.rviz"]
     )
@@ -48,14 +38,14 @@ def generate_launch_description():
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[robot_description, robot_controllers],
+        parameters=[robot_description, robot_controllers],  #get the control config file
         output="both",
     )
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
-        parameters=[robot_description],
+        parameters=[robot_description],  # the genercated urdf
         remappings=[
             ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
@@ -68,6 +58,8 @@ def generate_launch_description():
         arguments=["-d", rviz_config_file],
     )
 
+    # the node is a factory style to genercate the controler
+    # ros2 control list_controllers
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",

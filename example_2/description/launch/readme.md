@@ -1,0 +1,25 @@
+## launch view to show the model
+
+这段代码是一个ROS 2的Launch文件，用于启动一组ROS节点以实现机器人的模拟和可视化。
+
+首先，代码导入了一些必要的模块和类。然后，定义了一个函数generate_launch_description()，该函数返回一个LaunchDescription对象，其中包含了要启动的节点和它们的配置。
+
+在函数内部，首先声明了一些启动参数，使用DeclareLaunchArgument类来定义参数的名称、默认值和描述。这些参数包括：
+
+description_package：描述机器人URDF/xacro文件的软件包名称，默认为"ros2_control_demo_example_2"。
+description_file：机器人的URDF/XACRO描述文件，默认为"diffbot.urdf.xacro"。
+prefix：关节名称的前缀，对于多机器人设置很有用。默认为空字符串。
+然后，通过LaunchConfiguration类初始化这些参数，以便在后面的节点配置中使用。
+
+接下来，使用Command类和PathJoinSubstitution类创建一个命令，该命令通过xacro获取URDF文件的内容。命令中的参数是通过FindExecutable类和FindPackageShare类来查找相关的可执行文件和软件包路径。最终，将URDF文件的内容存储在一个字典中，键为"robot_description"。
+
+然后，使用PathJoinSubstitution类创建了一个rviz_config_file，用于指定RViz的配置文件路径。
+
+之后，创建了三个节点：
+
+joint_state_publisher_node：使用joint_state_publisher_gui软件包的joint_state_publisher_gui可执行文件来发布关节状态信息。
+robot_state_publisher_node：使用robot_state_publisher软件包的robot_state_publisher可执行文件来发布机器人的状态信息。通过parameters参数传递了之前获取的机器人描述内容。
+rviz_node：使用rviz2软件包的rviz2可执行文件来启动RViz可视化界面，并通过arguments参数指定了使用的RViz配置文件路径。
+最后，将这三个节点添加到一个列表中，并将该列表与之前声明的启动参数列表合并，最终作为LaunchDescription对象的参数返回。
+
+这段代码的作用是启动相关的ROS节点，实现机器人的关节状态发布、机器人状态发布和RViz可视化。

@@ -34,6 +34,41 @@
 
 namespace ros2_control_demo_example_2
 {
+
+/*
+hardware_interface::SystemInterface 是 ROS 2 中的一个接口类，用于定义机器人硬件接口的系统级别功能。
+
+hardware_interface::SystemInterface
+定义了与硬件交互的基本功能，包括初始化、激活、读取状态和写入命令等。这个接口类是 ROS 2
+控制系统中硬件接口的核心组成部分，它提供了一种标准化的方式来定义和实现与硬件通信的接口。
+
+下面是 hardware_interface::SystemInterface 接口类的主要成员函数：
+
+hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo
+&info)：在初始化硬件接口时调用的回调函数。该函数用于执行硬件接口的初始化操作，并返回初始化的结果。
+
+std::vector<hardware_interface::StateInterface>
+export_state_interfaces()：导出机器人硬件的状态接口。该函数返回一个包含所有状态接口的向量，每个接口包含状态名称、接口类型和指向状态数据的指针。
+
+std::vector<hardware_interface::CommandInterface>
+export_command_interfaces()：导出机器人硬件的命令接口。该函数返回一个包含所有命令接口的向量，每个接口包含命令名称、接口类型和指向命令数据的指针。
+
+hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State
+&previous_state)：在激活硬件接口时调用的回调函数。该函数用于执行硬件接口的激活操作，并返回激活的结果。
+
+hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State
+&previous_state)：在停用硬件接口时调用的回调函数。该函数用于执行硬件接口的停用操作，并返回停用的结果。
+
+hardware_interface::return_type read(const rclcpp::Time &time, const rclcpp::Duration
+&period)：读取硬件状态的函数。该函数在每个控制周期调用，用于读取硬件的状态信息，并更新状态数据。
+
+hardware_interface::return_type write(const rclcpp::Time &time, const rclcpp::Duration
+&period)：写入命令到硬件的函数。该函数在每个控制周期调用，用于将命令数据写入到硬件接口，控制机器人的运动。
+
+hardware_interface::SystemInterface
+是一个抽象的接口类，用于定义自定义机器人硬件接口的行为。在实际使用中，需要创建一个继承自
+hardware_interface::SystemInterface 的子类，并实现其中的成员函数来定义特定硬件接口的行为逻辑。
+*/
 class DiffBotSystemHardware : public hardware_interface::SystemInterface
 {
 public:

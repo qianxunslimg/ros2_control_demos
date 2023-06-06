@@ -2,7 +2,7 @@
 build/
 install/
 log/
-
+.vscode/
 *~
 *.kate-swp
 *.kdev4
