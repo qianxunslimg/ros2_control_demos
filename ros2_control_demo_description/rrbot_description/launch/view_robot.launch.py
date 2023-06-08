@@ -20,6 +20,7 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
+# the package name is "rrbot_description"
 def generate_launch_description():
     # Declare arguments
     declared_arguments = []
@@ -58,9 +59,16 @@ def generate_launch_description():
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
+            #在这段代码中，description_package 是一个 LaunchConfiguration 对象，但是 FindPackageShare 函数期望接收一个字符串作为参数。所以为了将 description_package 转换为字符串，它被传递给了 FindPackageShare 函数的参数列表中。
+            #在这种情况下，description_package 对象会在运行时解析为实际的值，然后作为字符串传递给 FindPackageShare 函数。这是因为 PathJoinSubstitution 期望接收字符串参数，而 LaunchConfiguration 对象在执行时会返回参数的实际值。
+            #因此，尽管 description_package 是一个 LaunchConfiguration 对象，但在这个上下文中，它会被解析为字符串，以满足 FindPackageShare 函数的要求。
             PathJoinSubstitution(
                 [FindPackageShare(description_package), "urdf", description_file]
             ),
+            # the default param is string
+            # PathJoinSubstitution(
+            #     [FindPackageShare("rrbot_description"), "urdf", description_file]
+            # ),
             " ",
             "prefix:=",
             prefix,
@@ -97,3 +105,7 @@ def generate_launch_description():
     ]
 
     return LaunchDescription(declared_arguments + nodes)
+
+# to debug
+if __name__ == "__main__":
+    generate_launch_description()

@@ -49,6 +49,7 @@ def generate_launch_description():
     )
 
     # Initialize Arguments
+    # it is the now pkg name
     description_package = LaunchConfiguration("description_package")
     description_file = LaunchConfiguration("description_file")
     prefix = LaunchConfiguration("prefix")
@@ -80,6 +81,7 @@ def generate_launch_description():
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
+        #参数接口要求传递一个字典作为参数。这个字典的键名是参数的名称，键值是参数的值。
         parameters=[robot_description],
     )
     rviz_node = Node(
